@@ -1,51 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.CreateAccountActivity">
+    android:orientation="vertical"
+    android:padding="27dp"
+    android:background="@color/white"
+    tools:context=".view.LoginActivity">
+
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_gravity="center_vertical"
+        android:padding="8dp"
+        android:background="@android:color/white">
 
-        <EditText
-            android:id="@+id/nameEditText"
+        <ImageView
+            android:id="@+id/myImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:src="@drawable/gamingshere" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name" />
+            android:text="@string/sign_up_title"
+            android:id="@+id/loginText"
+            android:textSize="36sp"
+            android:layout_marginTop="25dp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/lavender"/>
 
         <EditText
             android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/username" />
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/username"
+            android:inputType="text"
+            android:autofillHints="username"
+            android:background="@drawable/custom_editext"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:drawablePadding="8dp"
+            android:hint="@string/username"
+            android:padding="8dp"
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:autofillHints="password"
+            android:text="@string/password"
+            android:background="@drawable/custom_editext"
+            android:drawableLeft="@drawable/baseline_lock_24"
+            android:drawablePadding="8dp"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:padding="8dp"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black" />
 
         <Button
-            android:id="@+id/signUpButton"
+            android:id="@+id/create_new_account"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sign_up" />
+            android:layout_height="50dp"
+            android:text="@string/create_account"
+            android:layout_marginTop="20dp"
+            app:cornerRadius="30dp"
+            android:backgroundTint="@color/lavender"
+            android:textAllCaps="false"
+            android:background="@drawable/button_rounded"/>
 
-        <TextView
-            android:id="@+id/alreadyMemberText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/already_have_account"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:text="@string/already_member"
-            android:textAlignment="center"
-            android:paddingTop="16dp" />
+            android:layout_marginTop="20dp"
+            app:cornerRadius="30dp"
+            android:backgroundTint="@color/lavender"
+            android:textAllCaps="false"
+            android:background="@drawable/button_rounded"/>
 
     </LinearLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

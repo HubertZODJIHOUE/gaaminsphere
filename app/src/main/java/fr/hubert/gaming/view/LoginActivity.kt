@@ -1,6 +1,6 @@
 package fr.hubert.gaming.view
 
-import LoginViewModel
+import fr.hubert.gaming.viewModel.LoginViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hubert.gaming.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,9 +21,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-         val usernameEditText= findViewById<EditText>(R.id.username)
-        val passwordEditText = findViewById<EditText>(R.id.password)
-        val loginButton = findViewById<Button>(R.id.login_button)
+         val usernameEditText= findViewById<EditText>(R.id.usernameEditText)
+        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
+        val loginButton = findViewById<Button>(R.id.sign_Button)
         loginButton.setOnClickListener {
             val username = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -58,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             })
         }
-        val createAccountText: TextView = findViewById(R.id.createAccountText)
+        val createAccountText: TextView = findViewById(R.id.createAccount)
 
         // Définir un écouteur de clics sur le TextView
         createAccountText.setOnClickListener {

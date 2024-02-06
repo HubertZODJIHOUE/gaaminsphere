@@ -6,4 +6,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="RoundButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Button</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:backgroundTint">@color/lavender</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:stateListAnimator">@null</item>
+
+        <item name="android:background">@drawable/custom_editext</item>
+    </style>
+
 </resources>

@@ -1,6 +1,6 @@
 package fr.hubert.gaming.di
 
-import LoginViewModel
+import fr.hubert.gaming.viewModel.LoginViewModel
 import fr.hubert.gaming.network.LoginService
 import fr.hubert.gaming.repository.LoginRepository
 import okhttp3.OkHttpClient
@@ -8,8 +8,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
