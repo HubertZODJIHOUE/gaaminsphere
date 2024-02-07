@@ -1,19 +1,23 @@
 package fr.hubert.gaming.viewModel
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.hubert.gaming.data.repository.UserRepository
 import fr.hubert.gaming.model.LoginResult
 import fr.hubert.gaming.repository.LoginRepository
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(private val loginRepository: LoginRepository, private val  userRepository: UserRepository) : ViewModel() {
     // LiveData pour observer les changements de l'état de connexion dans l'UI
     private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
+//    val loginResult: LiveData<LoginResult> = _loginResult
+private val loginResult = MutableLiveData<Boolean>()
+
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
@@ -29,6 +33,37 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             }
         }
     }
+    // Dans LoginViewModel
+//    fun loginUserRoom(username: String, password: String, context: Context) = viewModelScope.launch {
+//        userRepository.getUserByUsername(username)?.let { user ->
+//            if (user.password == password) {
+//                val sharedPrefs = context.getSharedPreferences("YourAppPrefs", Context.MODE_PRIVATE)
+//                with(sharedPrefs.edit()) {
+//                    putInt("USER_ID", user.id)
+//                    apply()
+//                }
+//                // Gérez la navigation ou l'action de succès ici
+//            } else {
+//                // Gérez l'erreur de login ici
+//            }
+//        }
+//    }
+
+    fun loginUserRoom(username: String, password: String, context: Context) = viewModelScope.launch {
+        val user = userRepository.getUserByUsername(username)
+        if (user != null && user.password == password) {
+            val sharedPrefs = context.getSharedPreferences("YourAppPrefs", Context.MODE_PRIVATE)
+            with(sharedPrefs.edit()) {
+                putInt("USER_ID", user.id)
+                apply()
+            }
+            loginResult.postValue(true)
+        } else {
+            loginResult.postValue(false)
+        }
+    }
+
+
 }
 
 

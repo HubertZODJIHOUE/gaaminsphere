@@ -1,8 +1,14 @@
 package fr.hubert.gaming.di
 
+import CreateGameViewModel
+import androidx.room.Room
+import fr.hubert.gaming.data.database.GamingSphereDatabase
+import fr.hubert.gaming.data.repository.GameRepository
+import fr.hubert.gaming.data.repository.UserRepository
 import fr.hubert.gaming.viewModel.LoginViewModel
 import fr.hubert.gaming.network.LoginService
 import fr.hubert.gaming.repository.LoginRepository
+import fr.hubert.gaming.viewModel.CreateUserViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -38,8 +44,29 @@ val appModule = module {
     }
 
 
-    viewModel {
-        LoginViewModel(loginRepository = get())
+    single {
+        Room.databaseBuilder(get(), GamingSphereDatabase::class.java, "GaminDataBase")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
+    single { get<GamingSphereDatabase>().userDao() }
+    single { get<GamingSphereDatabase>().gameDao() }
+    single {
+        UserRepository(get()) // Ici, `get()` va automatiquement fournir UserDao
+    }
+    single {
+        GameRepository(get()) // Ici, `get()` va automatiquement fournir UserDao
+    }
+
+
+//    viewModel {
+//        LoginViewModel(loginRepository = get())
+//
+//    }
+    viewModel { CreateUserViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel {
+        CreateGameViewModel(get())
+    }
 }
