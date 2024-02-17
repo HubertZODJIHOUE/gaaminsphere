@@ -11,6 +11,7 @@
 
     <string name="no_account">Creer un compte</string>
     <string name="already_member">Déja inscrit ?</string>
+    <string name="connexion_avec_google">Se connceter avec Google?</string>
 
 
 </resources>

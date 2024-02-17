@@ -25,13 +25,14 @@ class GameListAdapter(private var games: List<Game>) : RecyclerView.Adapter<Game
 
             binding.textViewTitle.text = game.name
             binding.textViewName.text = game.name
+
             // Set listeners for edit and delete icons
-            binding.imageViewEdit.setOnClickListener {
-                // TODO: Implement edit functionality
-            }
-            binding.imageViewDelete.setOnClickListener {
-                // TODO: Implement delete functionality
-            }
+//            binding.imageViewEdit.setOnClickListener {
+//                // TODO: Implement edit functionality
+//            }
+//            binding.imageViewDelete.setOnClickListener {
+//                // TODO: Implement delete functionality
+//            }
         }
     }
 

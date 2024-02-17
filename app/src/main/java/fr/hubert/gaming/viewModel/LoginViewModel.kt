@@ -3,7 +3,6 @@ package fr.hubert.gaming.viewModel
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,57 +10,66 @@ import fr.hubert.gaming.data.repository.UserRepository
 import fr.hubert.gaming.model.LoginResult
 import fr.hubert.gaming.repository.LoginRepository
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import retrofit2.Response
 
-class LoginViewModel(private val loginRepository: LoginRepository, private val  userRepository: UserRepository) : ViewModel() {
-    // LiveData pour observer les changements de l'état de connexion dans l'UI
-    private val _loginResult = MutableLiveData<LoginResult>()
-//    val loginResult: LiveData<LoginResult> = _loginResult
-private val loginResult = MutableLiveData<Boolean>()
+/**we give two repository one for API : LoginRepository and userRoomrepository for  local room datatbase**/
+class LoginViewModel(private val loginRepository: LoginRepository, private val  userRoomRepository: UserRepository) : ViewModel() {
+    private val loginResultApi = MutableLiveData<Boolean>()
+    public val loginResult = MutableLiveData<Boolean>()
 
 
-    fun login(username: String, password: String) {
+
+    /**
+     * Initiates a login request through the provided login service. This function is responsible for
+     * communicating with the repository to send login credentials and process the response.
+     *
+     * @param username The username entered by the user.
+     * @param password The password entered by the user.
+     */
+    private fun loginUserApi(username: String, password: String) {
         viewModelScope.launch {
             try {
-                val response = loginRepository.login(username, password)
+                /** Performing the login request via the repository. */
+                val response: Response<ResponseBody> = loginRepository.login(username, password)
 
-                Log.d("LoginResponse", "Réponse réussieaaaaaaaaa@@@ : ${response.toString()}")
+                if (response.isSuccessful && response.body() != null) {
+                    /** Assuming successful login if the response is successful and body is not null. */
+                    Log.d("LoginResponse", "@@@@@@@@@@@Login successful: ${response.body().toString()}")
+                    loginResultApi.postValue(true)
+//                    Toast.makeText(this@LoginViewModel, "Login to API successful", Toast.LENGTH_SHORT).show()
 
-                // Supposons que vous traitiez la réponse ici pour déterminer le succès
-                //_loginResult.postValue(LoginResult(success = true, message = "Connexion réussie"))
+                } else {
+                    /** Considering any non-successful response as a login failure. */
+                    Log.e(
+                        "LoginResponse",
+                        "Login failed: ${response.errorBody()?.string() ?: "Unknown error"}"
+                    )
+                    loginResultApi.postValue(false)
+                }
             } catch (e: Exception) {
-               // _loginResult.postValue(LoginResult(success = false, message = "Échec de la connexion: ${e.message}"))
+                /** Handling exceptions related to the network request. */
+                Log.e("LoginError", "Login failure: ${e.message}")
+                loginResult.postValue(false)
             }
         }
     }
-    // Dans LoginViewModel
-//    fun loginUserRoom(username: String, password: String, context: Context) = viewModelScope.launch {
-//        userRepository.getUserByUsername(username)?.let { user ->
-//            if (user.password == password) {
-//                val sharedPrefs = context.getSharedPreferences("YourAppPrefs", Context.MODE_PRIVATE)
-//                with(sharedPrefs.edit()) {
-//                    putInt("USER_ID", user.id)
-//                    apply()
-//                }
-//                // Gérez la navigation ou l'action de succès ici
-//            } else {
-//                // Gérez l'erreur de login ici
-//            }
-//        }
-//    }
 
     fun loginUserRoom(username: String, password: String, context: Context) = viewModelScope.launch {
-        val user = userRepository.getUserByUsername(username)
-        if (user != null && user.password == password) {
+        val user = userRoomRepository.getUserByUsername(username)
+        if (user != null && user.password == password && user.username== username) {
             val sharedPrefs = context.getSharedPreferences("YourAppPrefs", Context.MODE_PRIVATE)
             with(sharedPrefs.edit()) {
                 putInt("USER_ID", user.id)
                 apply()
             }
             loginResult.postValue(true)
+            loginUserApi(user.username, user.password)
         } else {
             loginResult.postValue(false)
         }
     }
+
 
 
 }

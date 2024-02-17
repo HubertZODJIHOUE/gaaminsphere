@@ -65,6 +65,12 @@
                 android:inputType="textPassword"
                 android:textColor="@android:color/black" />
 
+<!--            <com.google.android.gms.common.SignInButton-->
+<!--                android:id="@+id/sign_in_button"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/button_rounded"/>-->
+
             <Button
                 android:id="@+id/sign_Button"
                 android:layout_width="match_parent"
@@ -74,7 +80,23 @@
                 app:cornerRadius="30dp"
                 android:backgroundTint="@color/lavender"
                 android:textAllCaps="false"
-                android:background="@drawable/button_rounded"/>
+                android:background="@drawable/button_rounded"
+                />
+
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/google_sign_in_button"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:text="@string/connexion_avec_google"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@color/black"-->
+<!--                app:icon="@drawable/google_icon"-->
+<!--                app:iconPadding="10dp"-->
+<!--                app:iconGravity="textStart"-->
+<!--                app:cornerRadius="30dp"-->
+<!--                android:background="@drawable/google_button_border"-->
+<!--                />-->
 
             <Button
                 android:id="@+id/createAccount"
@@ -86,6 +108,15 @@
                 android:backgroundTint="@color/lavender"
                 android:textAllCaps="false"
                 android:background="@drawable/button_rounded"/>
+
+
+            <ProgressBar
+                android:id="@+id/loginProgress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

@@ -1,91 +1,120 @@
 package fr.hubert.gaming.view
 
-import fr.hubert.gaming.viewModel.LoginViewModel
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewmodel.compose.viewModel
 import fr.hubert.gaming.R
 import fr.hubert.gaming.databinding.ActivityLoginBinding
+import fr.hubert.gaming.viewModel.LoginViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class LoginActivity : AppCompatActivity() {
 
+    /*** Lazy initialization of the LoginViewModel with delegation ***/
     private val loginViewModel: LoginViewModel by viewModel()
+
+    /*** Declaration of the ViewBinding for activity_login.xml ***/
     private lateinit var binding: ActivityLoginBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-         val usernameEditText= findViewById<EditText>(R.id.usernameEditText)
-        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
-        val loginButton = findViewById<Button>(R.id.sign_Button)
+        /*** Initializing ViewBinding ***/
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        loginButton.setOnClickListener {
-            val username = usernameEditText.text.toString()
-            val password = passwordEditText.text.toString()
+        /*** Adding text watchers to EditTexts for reactive input validation ***/
+        addTextWatchers()
 
+        /*** Setting up click listener for the sign-in button ***/
+        binding.signButton.setOnClickListener {
+            val username = binding.usernameEditText.text.toString()
+            val password = binding.passwordEditText.text.toString()
+
+            /*** Assuming validation is already done via TextWatchers ***/
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                loginViewModel.loginUserRoom(username, password, this)
-            } else {
-                Toast.makeText(this, "Les champs ne peuvent pas être vides.", Toast.LENGTH_LONG).show()
+                /*** Initiating login process ***/
+                loginViewModel.loginUserRoom(username, password, applicationContext)
+                /*** Observing login result and notifying the user ***/
+                observeLoginResult()
             }
-//            loginViewModel.login(username, password)
-//            loginViewModel.loginResult.
-//
-
-//            loginViewModel.loginResult.observe(this, Observer { loginResult ->
-//                if (loginResult != null) {
-//                    Log.e("LoginActivity", "Résultat de la connexion dfdddfdffdfd : $loginResult")
-//
-////                    val messageToShow = if (loginResult.success) {
-////                        "Connexion réussie : ${loginResult.message}"
-////                    } else {
-////                        "Échec de la connexion : ${loginResult.message}"
-////                    }
-//
-////                    val messageToShow = if (loginResult.success) {
-////                        "Connexion réussie : ${loginResult.message}"
-////                    } else {
-////                        "Échec de la connexion : ${loginResult.message}"
-////                    }
-//                    // Afficher le message dans un Toast
-////                    Toast.makeText(this, messageToShow, Toast.LENGTH_SHORT).show()
-////                    if (loginResult.success) {
-////                        // Gérer le succès du login, par exemple en naviguant vers une autre activité
-////                        navigateToHomeScreen()
-////                    } else {
-////                        // Afficher un message d'erreur à l'utilisateur
-////                        showLoginFailed(loginResult.message)
-////                    }
-//                }
-//            })
-        }
-        val createAccountText: TextView = findViewById(R.id.createAccount)
-
-        // Définir un écouteur de clics sur le TextView
-        createAccountText.setOnClickListener {
-            // Créer une intention pour démarrer l'activité de création de compte
-            val intent = Intent(this, CreateAccountActivity::class.java)
-            startActivity(intent)
         }
     }
-    private fun navigateToHomeScreen() {
-        Toast.makeText(this, "Login attempt with", Toast.LENGTH_SHORT).show()
-        // Navigation vers l'écran d'accueil ou une autre activité
+
+    /*** Adds TextWatchers to EditTexts for reactive validation ***/
+    private fun addTextWatchers() {
+        binding.usernameEditText.addTextChangedListener(object : TextWatcher {
+            /*** Callback before text changes ***/
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            /*** Callback as text is changing ***/
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            /*** Callback after text has changed ***/
+            override fun afterTextChanged(s: Editable?) {
+                /*** Validating username input ***/
+                validateUsername()
+            }
+        })
+
+        binding.passwordEditText.addTextChangedListener(object : TextWatcher {
+            /*** Callback before text changes ***/
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            /*** Callback as text is changing ***/
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            /*** Callback after text has changed ***/
+            override fun afterTextChanged(s: Editable?) {
+                /*** Validating password input ***/
+                validatePassword()
+            }
+        })
     }
 
-    private fun showLoginFailed(errorString: String?) {
-        // Afficher un Toast ou une Snackbar avec le message d'erreur
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    /*** Validates username and applies the appropriate background ***/
+    private fun validateUsername() {
+        val username = binding.usernameEditText.text.toString()
+        if (username.isEmpty() || username.isBlank() || username.all { it.isDigit() }) {
+            binding.usernameEditText.error = "Username cannot be empty or a number"
+            binding.usernameEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+        } else {
+            binding.usernameEditText.setBackgroundResource(R.drawable.edit_text_valid_background)
+        }
+    }
+
+    /*** Validates password and applies the appropriate background ***/
+    private fun validatePassword() {
+        val password = binding.passwordEditText.text.toString()
+        if (password.isEmpty() || password.length < 6) {
+            binding.passwordEditText.error = "Password must be at least 6 characters"
+            binding.passwordEditText.setBackgroundResource(R.drawable.edit_text_error_background)
+        } else {
+            binding.passwordEditText.setBackgroundResource(R.drawable.edit_text_valid_background)
+        }
+    }
+
+    /*** Observes login result LiveData from the ViewModel ***/
+    private fun observeLoginResult() {
+        loginViewModel.loginResult.observe(this, Observer { isSuccess ->
+            if (isSuccess) {
+                /*** Navigating to the game list activity on successful login ***/
+                navigateToGameListeActivity()
+            } else {
+                /*** Showing toast message on login failure ***/
+                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    /*** Navigates to GamesListeActivity ***/
+    private fun navigateToGameListeActivity() {
+        val intent = Intent(this, GamesListeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
